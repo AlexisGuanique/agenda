@@ -1,0 +1,179 @@
+*{
+    margin: 0;
+}
+
+nav{
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    background-color: gray;
+    width: 100%;
+    height: 80px;
+    margin: 0;
+    z-index: 1;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+    box-shadow: 2px 2px 10px 1px black;
+
+}
+
+nav h1{
+    width: 40%;
+    padding: 20px;
+    font-family: 'Times New Roman', Times, serif;
+    color: black;
+    font-size: 1.7em;
+    margin-top: 0;
+    text-shadow: 2px 2px 2px rgb(187, 185, 185) ;
+}
+
+nav ul{
+    width: 30%;
+    height: 40px;
+    padding: 15px;
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    margin-top:0;
+}
+
+nav ul li{
+    list-style-type: none;
+    margin: 0 10px;
+    background-color: rgb(82, 82, 82);
+    border-radius: 5px;
+    box-shadow: 2px 2px 10px 1px rgb(187, 185, 185);
+}
+
+nav ul li a{
+    display: inline-block;
+    text-decoration: none;
+    padding: 5px 5px;
+    color: rgb(230, 230, 230);
+    font-size: 1.3em;
+}
+
+nav .username{
+    display: inline-block;
+    text-decoration: none;
+    padding: 5px 5px;
+    color: rgb(230, 230, 230);
+    font-size: 1.3em;
+}
+
+/* ################################################################# */
+/* Seccion de contenido */
+
+.content{
+    margin-top: 120px;
+    width: 99%;
+    min-height: calc(100vh - 80px - 60px);
+    display: flex;
+    flex-flow: column wrap;
+    align-items: center;
+}
+
+.content .mini-content{
+    border: 1px solid black;
+    width: 50%;
+    height: auto;
+    display: flex;
+    flex-flow: column wrap;
+    border-radius: 10px;
+    box-shadow: 5px 5px 5px 5px grey;
+    margin: 0px 20px 20px 20px;
+}
+
+
+header h1{
+    text-align: center;
+}
+
+.formulario{
+    width: 50%;
+    margin: 20px auto;
+    display: flex;
+    flex-flow: column wrap;
+}
+
+.formulario label, .formulario input {
+    margin: 10px;
+    text-align: center;
+}
+
+.formulario2{
+    padding: 20px;
+    display: flex;
+    flex-flow: row wrap;
+
+}
+
+.formulario2 label, .formulario2 input {
+    margin: 10px;
+    text-align: center;
+}
+
+.boton{
+    background-color: lightskyblue;
+    border-radius: 5px;
+    border: 1px solid grey;
+
+}
+
+
+
+/* ######################################################################## */
+.todo{
+    padding: 10px;
+}
+
+.action{
+    text-decoration: none;
+    color: lightskyblue;
+}
+
+.content .mini-content header{
+    width: 100%;
+    display: flex;
+    flex-flow: column wrap;
+    text-align: center;
+}
+
+.content .mini-content header a{
+    color: lightskyblue;
+     font-size: 1.8em;
+     text-decoration: none;
+     padding: 10px;
+}
+
+.content .mini-content header h1{
+    color: black;
+     font-size: 2.5em;
+     text-decoration: none;
+     padding: 10px;
+}
+
+
+
+
+/* ######################################################################## */
+
+/* ####################################################################### */
+/* Pie de pagina */
+
+footer{
+    margin-top:50px; 
+    background-color: rgb(124, 122, 122, 0.9);
+    width: 100%;
+    height: 40px;
+    box-shadow: 2px 2px 10px 1px black;
+}
+
+footer p{
+
+    color: rgba(240, 240, 240, 0.9);
+
+}
+
+

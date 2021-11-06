@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block header %}
+    <h1>{% block title %}Crear Nuevo Registro{% endblock %}</h1> 
+{% endblock %}
+
+{% block content %}
+    <form class="formulario" method="POST">
+        <label for="description">Descripción</label>
+        <input name="description" id="description" requiered />
+        <input class="boton" type="submit" value="Guardar" />
+    </form>
+{% endblock %}
