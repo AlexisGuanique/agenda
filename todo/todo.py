@@ -1,15 +1,18 @@
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, url_for
 )
-from werkzeug.exceptions import abort #Cuando algun usuario intente modificar algun todo que no le pertenezca, nosotros le enviamos el mensaje de abort
+#Cuando algun usuario intente modificar algun todo que no le pertenezca, nosotros le enviamos el mensaje de abort
+from werkzeug.exceptions import abort
 
 from todo.auth import login_required #Funcion que nos permite proteger todos nuestros endpoints
 from todo.db import get_db #Importamos nuestra base de datos
 
 
-bp = Blueprint('todo', __name__) #Blueprint para nuestros todos
+#BLUEPRINT PARA NUESTROS TODOS
+bp = Blueprint('todo', __name__)
 
-@bp.route('/')  #Esta funcion es para listar todos los todos (registros)
+#ESTA FUNCION ES PARA LISTAR TODOS LOS TODOS (REGISTROS)
+@bp.route('/')
 @login_required
 def index():
     db, c = get_db()
@@ -21,7 +24,7 @@ def index():
     return render_template('todo/index.html', todos=todos)
 
 
-
+# funcion para crear los todos
 @bp.route('/create', methods=['GET', 'POST'])
 @login_required
 def create():
@@ -45,6 +48,7 @@ def create():
 
     return render_template('todo/create.html')
 
+# FUNCION PARA EXTRAER EL todo QUE VAMOS A MODIFICAR
 def get_todo(id):
     db, c = get_db()
     c.execute(
@@ -57,6 +61,7 @@ def get_todo(id):
         abort(404, 'El todo de id {} no existe'.format(id))
     return todo
 
+# FUNCION PARA MODIFICAR EL todo
 @bp.route('/<int:id>/update', methods=['GET', 'POST'])
 @login_required
 def update(id):
@@ -86,7 +91,7 @@ def update(id):
     return render_template('todo/update.html', todo=todo)
 
 
-
+# FUNCION PARA BORRAR UN todo
 @bp.route('/<int:id>/delete', methods=['POST'])
 @login_required
 def delete(id):

@@ -1,46 +1,48 @@
-import  functools #Esto es un set de funciones que podemos utilizar cuando estamos construyendo aplicaciones
-from click.decorators import password_option #Es un set de funciones que podemos utilizar cuando estamos creando aplicaciones
+import  functools
+from click.decorators import password_option
 from flask import (
-    Blueprint, #Nos permite crear blueprints/modulos configurables 
-    flash, #Es una pequeña funcion de manera generica a nuestra plantilla
-    g, #Una variable general de Flask
-    render_template, #Para renderizar plantillas
-    request, #Para recibir elementos por medio de los metodos HTTP (formularios)
-    url_for, #Sirve para crear URL
-    session, #Es para mantener una referencia del usuario que encuentra interactuando con nuestra aplicacion
-    redirect #Este modulo es para redirigir a las funciones o a las plantillas
+    Blueprint,
+    flash,
+    g,
+    render_template,    
+    request,
+    url_for,
+    session,
+    redirect
 )
-from werkzeug.security import check_password_hash, generate_password_hash #Check verifica las contraseñas y generate las encripta
+#Check verifica las contraseñas y generate las encripta
+from werkzeug.security import check_password_hash, generate_password_hash 
 
 from todo.db import get_db
 
-bp = Blueprint('auth', __name__, url_prefix='/auth')  #Blueprint de autenticacion 
+
+#Blueprint para autenticar
+bp = Blueprint('auth', __name__, url_prefix='/auth') 
 
 
 #FUNCION PARA REGISTRAR USUARIO
-
 @bp.route('/register', methods=['GET','POST'])
 def register():
-    if request.method == 'POST': #Validamos que el metodo que nosotros enviamos en el formulario sea POST
+    if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        db, c = get_db() #Traemos la base de datos
+        db, c = get_db()
         error = None
-        c.execute( #Ejecutamos la consulta
+        c.execute(
             'SELECT id FROM user WHERE username = %s', (username,)
         )
 
-        if not username: #Si el usuario no ingresa un username haga esto
+        if not username:
             error = 'Username requerido'
 
-        if not password: #Si el usuario no ingresa una contraseña haga esto
+        if not password:
             error = 'Password requerido'
 
-        elif c.fetchone() is not None: #Si el usuario ingresa un usuario existente
+        elif c.fetchone() is not None:
             error = 'Usuario {} se encuentra registrado.'.format(username)
 
 
-        if error is None: #Si el usuario ingresa todo bien
+        if error is None:
             password = generate_password_hash(password)
 
             c.execute(
@@ -51,44 +53,44 @@ def register():
             
             return redirect(url_for('auth.login'))
 
-        flash(error) #Enviamos mensaje de error, en caso de que haya algun error
+        flash(error)
     
     return render_template('auth/register.html')
 
  
+
 #FUNCION PARA LOGUEARSE
-@bp.route('/login', methods=['GET','POST']) #Definimos ruta para el login
+@bp.route('/login', methods=['GET','POST'])
 def login():
-    if request.method == 'POST': #Validamos que el metodo que nosotros enviamos en el formulario sea POST
+    if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        db, c = get_db() #Llamamos a la funcion get_db() para manipular la base de datos
+        db, c = get_db()
         error = None
         c.execute(
             'SELECT * FROM user WHERE username = %s', (username, )
         )
-        user = c.fetchone() #Aqui le damos el valor extraido de username a la variable user
+        user = c.fetchone()
 
-        if user is None: #Aqui verificamos si el valor de user no existe, entonces devolvemos error
+        if user is None:
             error= 'Usuario y/o contraseña invalida'
         
-        elif not check_password_hash(user['password'], password): #Aqui consultamos si la contraseña que nosotros le estamos pasando es la misma que tenemos registrada en la base de datos
-
+        elif not check_password_hash(user['password'], password):
             error = 'Usuario y/o contraseña invalida'
 
-        if error is None: #Si no hay ningun error, quiere decir que todo salío bien
-            session.clear() #Limpiamos la sesion
-            session['user_id'] = user['id'] #Creamos una variable llamada user_id, a la cual le asignaremos el id del user que consultamos
+        if error is None:
+            session.clear()
+            session['user_id'] = user['id']
 
-            return redirect(url_for('todo.index')) #retornamos el index que seria el inicio 
+            return redirect(url_for('todo.index')) 
         
-        flash(error) #Mostramos un mensaje, si es que en algun momento hubo un error
+        flash(error)
 
     return render_template('auth/login.html')
 
-
+#FUNCION PARA CARGAR AL USUIARIO
 @bp.before_app_request
-def load_logged_in_user(): #funcion para cargar al usuiario
+def load_logged_in_user():
     user_id = session.get('user_id')
 
     if user_id is None:
@@ -102,8 +104,10 @@ def load_logged_in_user(): #funcion para cargar al usuiario
         db.commit()
 
 
-def login_required(view): #Funcion para proteger nuestros endpoint
-    @functools.wraps(view) #Envolvemos la funcion de view con functools
+#Funcion para proteger nuestros endpoint
+def login_required(view):
+    #Envolvemos la funcion de view con functools
+    @functools.wraps(view)
     def wrapped_view(**kwargs):
         if g.user is None:
             return redirect(url_for('auth.login'))
@@ -111,6 +115,8 @@ def login_required(view): #Funcion para proteger nuestros endpoint
         return view(**kwargs)
     return wrapped_view
 
+
+# FUNCION DE LOGOUT
 @bp.route('/logout')
 def logout():
     session.clear()
